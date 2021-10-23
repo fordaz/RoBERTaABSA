@@ -84,13 +84,6 @@ class Instructor:
             increase_flag = False
             for i_batch, sample_batched in enumerate(self.train_data_loader):
                 global_step += 1
-                print(f"sample_batched \n \
-                    {sample_batched['text_indices'].shape} \n \
-                    {sample_batched['context_indices'].shape} \n \
-                    {sample_batched['aspect_indices'].shape} \n \
-                    {sample_batched['left_indices'].shape} \n \
-                    {sample_batched['polarity'].shape} \n \
-                    {sample_batched['dependency_graph'].shape}")
                 # switch model to training mode, clear gradient accumulators
                 self.model.train()
                 optimizer.zero_grad()
@@ -100,8 +93,6 @@ class Instructor:
                     for col in self.opt.inputs_cols
                 ]
                 targets = sample_batched["polarity"].to(self.opt.device)
-                print(f"Inputs {type(inputs)} {type(inputs[0])} {inputs[0].shape}")
-                # exit(1)
                 outputs = self.model(inputs)
                 loss = criterion(outputs, targets)
                 loss.backward()
