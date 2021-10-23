@@ -40,7 +40,8 @@ def build_embedding_matrix(word2idx, embed_dim, type, refresh=False):
         elif type == "sp":
             fname = "../../glove/word2vec_spanish.txt"
         else:
-            fname = "../glove/glove.840B.300d.txt"
+            # fname = "../glove/glove.840B.300d.txt"
+            fname = "glove/glove.840B.300d.txt"
         word_vec = load_word_vec(fname, word2idx=word2idx)
         print("building embedding_matrix:", embedding_matrix_file_name)
         for word, i in word2idx.items():

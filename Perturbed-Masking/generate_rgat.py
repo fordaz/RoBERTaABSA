@@ -15,6 +15,7 @@ if __name__ == "__main__":
 
     parser.add_argument("--matrix_folder", default="bert/Laptop")
     parser.add_argument("--layers", default="11")
+    parser.add_argument("--workspace", required=True)
 
     parser.add_argument("--subword", default="avg", choices=["first", "avg", "max"])
     parser.add_argument("--root", default="non-gold", help="use gold root as init")
@@ -40,11 +41,12 @@ if __name__ == "__main__":
     # trees: [[(w_i, head_i), (w_i, head_i), ...], []]
     # results: [[line, 0, 0], [line, 0, 0]]
 
+    workspace_dir = args.workspace
     model_type, dataset = args.matrix_folder.split("/")
-    matrix_folder = "/your/work/space/save_matrix/" + args.matrix_folder
+    matrix_folder = f"{workspace_dir}/save_matrix/{args.matrix_folder}"
 
-    os.makedirs(os.path.join("/your/work/space/rgat", model_type, args.layers, dataset), exist_ok=True)
-    save_folder = os.path.join("/your/work/space/rgat", model_type, args.layers, dataset)
+    os.makedirs(os.path.join(f"{workspace_dir}/rgat", model_type, args.layers, dataset), exist_ok=True)
+    save_folder = os.path.join(f"{workspace_dir}/rgat", model_type, args.layers, dataset)
     print("Save to {}".format(save_folder))
 
     fns = os.listdir(matrix_folder)
