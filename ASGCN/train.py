@@ -35,6 +35,7 @@ class Instructor:
             data=absa_dataset.test_data, batch_size=opt.batch_size, shuffle=False
         )
 
+        print(f"Model class {opt.model_class}")
         self.model = opt.model_class(absa_dataset.embedding_matrix, opt).to(opt.device)
         self._print_args()
         self.global_f1 = 0.0
@@ -83,7 +84,13 @@ class Instructor:
             increase_flag = False
             for i_batch, sample_batched in enumerate(self.train_data_loader):
                 global_step += 1
-
+                print(f"sample_batched \n \
+                    {sample_batched['text_indices'].shape} \n \
+                    {sample_batched['context_indices'].shape} \n \
+                    {sample_batched['aspect_indices'].shape} \n \
+                    {sample_batched['left_indices'].shape} \n \
+                    {sample_batched['polarity'].shape} \n \
+                    {sample_batched['dependency_graph'].shape}")
                 # switch model to training mode, clear gradient accumulators
                 self.model.train()
                 optimizer.zero_grad()
@@ -93,7 +100,8 @@ class Instructor:
                     for col in self.opt.inputs_cols
                 ]
                 targets = sample_batched["polarity"].to(self.opt.device)
-
+                print(f"Inputs {type(inputs)} {type(inputs[0])} {inputs[0].shape}")
+                # exit(1)
                 outputs = self.model(inputs)
                 loss = criterion(outputs, targets)
                 loss.backward()
@@ -213,7 +221,7 @@ if __name__ == "__main__":
     parser.add_argument("--learning_rate", default=0.001, type=float)
     parser.add_argument("--l2reg", default=0.00001, type=float)
     parser.add_argument("--num_epoch", default=100, type=int)
-    parser.add_argument("--batch_size", default=32, type=int)
+    parser.add_argument("--batch_size", default=2, type=int)
     parser.add_argument("--embed_dim", default=300, type=int)
     parser.add_argument("--hidden_dim", default=300, type=int)
     parser.add_argument("--dropout", default=0.7, type=float)
@@ -277,6 +285,6 @@ if __name__ == "__main__":
     opt.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     opt.save = False
     opt.refresh = False
-
+    print(f"Checking options {opt}")
     ins = Instructor(opt)
     ins.run()

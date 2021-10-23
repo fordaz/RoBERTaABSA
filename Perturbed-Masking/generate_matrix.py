@@ -9,7 +9,7 @@ import warnings
 warnings.filterwarnings("ignore")
 from transformers import (BertModel, BertTokenizer, RobertaModel,
                           RobertaTokenizer, XLMRobertaModel,
-                          XLMRobertaTokenizer, AutoModel, AutoTokenizer)
+                          XLMRobertaTokenizer)
 
 from dependency import get_dep_matrix_new
 from utils import DataLoader, UToken
@@ -20,7 +20,7 @@ if __name__ == "__main__":
         "roberta": (RobertaModel, RobertaTokenizer, "roberta-base"),
         "xlmroberta": (XLMRobertaModel, XLMRobertaTokenizer, "xlm-roberta-base"),
         "xlmbert": (BertModel, BertTokenizer, "bert-base-multilingual-cased"),
-        "ernie": (AutoModel, AutoTokenizer, "nghuyong/ernie-2.0-en"),
+        "ernie": (BertModel, BertTokenizer, "nghuyong/ernie-2.0-en"),
     }
     parser = argparse.ArgumentParser()
 
@@ -68,14 +68,9 @@ if __name__ == "__main__":
             raise RuntimeError("Wrong number of parts")
 
     print(f"Using the following pre-trained weights {pretrained_weights}")
-    if model_type != 'ernie':
-        model = model_class.from_pretrained(pretrained_weights, output_hidden_states=True)
-        do_lower = False
-        tokenizer = tokenizer_class.from_pretrained(MODEL_CLASSES[model_type][2])
-    else:
-        tokenizer = BertTokenizer.from_pretrained("nghuyong/ernie-2.0-en")
-        do_lower = False
-        model = BertModel.from_pretrained("nghuyong/ernie-2.0-en", output_hidden_states=True)
+    model = model_class.from_pretrained(pretrained_weights, output_hidden_states=True)
+    do_lower = False
+    tokenizer = tokenizer_class.from_pretrained(MODEL_CLASSES[model_type][2])
 
     output_dir = "save_matrix/{}{}{}".format(
         model_type, trained_on, "" if "/" not in args.model_path else "trained" + msg
