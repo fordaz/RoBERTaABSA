@@ -13,10 +13,10 @@ From the view of our paper, the code is used to generate the induced trees. The 
 1. Run `generate_matrix.py`.
 
 ```bash
-python generate_matrix.py --model_path Bert --data_dir /user/project/dataset/ --dataset Restaurant
+python generate_matrix.py --model_path bert --data_dir /user/project/dataset/ --dataset Restaurants
 ```
 
-- `model_path` can be either `Bert/RoBERTa/xlmRoberta/xlmbert` or the model path where the fine-tuned model is put.
+- `model_path` can be either `bert/roberta/xlmroberta/xlmbert` or the model path where the fine-tuned model is put.
 - `--data_dir` and `--dataset` arguments are explained in the following `Notes`.
 
 2. Generate input data for different model.

@@ -9,7 +9,7 @@ import warnings
 warnings.filterwarnings("ignore")
 from transformers import (BertModel, BertTokenizer, RobertaModel,
                           RobertaTokenizer, XLMRobertaModel,
-                          XLMRobertaTokenizer)
+                          XLMRobertaTokenizer, AutoModel, AutoTokenizer)
 
 from dependency import get_dep_matrix_new
 from utils import DataLoader, UToken
@@ -20,6 +20,7 @@ if __name__ == "__main__":
         "roberta": (RobertaModel, RobertaTokenizer, "roberta-base"),
         "xlmroberta": (XLMRobertaModel, XLMRobertaTokenizer, "xlm-roberta-base"),
         "xlmbert": (BertModel, BertTokenizer, "bert-base-multilingual-cased"),
+        "ernie": (AutoModel, AutoTokenizer, "nghuyong/ernie-2.0-en"),
     }
     parser = argparse.ArgumentParser()
 
@@ -29,7 +30,7 @@ if __name__ == "__main__":
     parser.add_argument("--dataset", default="Laptop")
     parser.add_argument("--data_dir", default=r'/your/work/space/RoBERTaABSA/Dataset')
     # Data args
-    parser.add_argument("--cuda", default=1, help="invoke to use gpu")
+    parser.add_argument("--cuda", default=False, help="invoke to use gpu")
     parser.add_argument(
         "--metric",
         default="dist",
@@ -41,7 +42,7 @@ if __name__ == "__main__":
     if "/" not in args.dataset:
         args.dataset = os.path.join(args.data_dir, args.dataset)
     dataset_name = os.path.basename(args.dataset)
-
+    print(f"Using the following dataset name {dataset_name}")
     if args.model_path.endswith("/"):
         args.model_path = args.model_path[:-1]
 
@@ -66,9 +67,15 @@ if __name__ == "__main__":
         else:
             raise RuntimeError("Wrong number of parts")
 
-    model = model_class.from_pretrained(pretrained_weights, output_hidden_states=True)
-    do_lower = False
-    tokenizer = tokenizer_class.from_pretrained(MODEL_CLASSES[model_type][2])
+    print(f"Using the following pre-trained weights {pretrained_weights}")
+    if model_type != 'ernie':
+        model = model_class.from_pretrained(pretrained_weights, output_hidden_states=True)
+        do_lower = False
+        tokenizer = tokenizer_class.from_pretrained(MODEL_CLASSES[model_type][2])
+    else:
+        tokenizer = BertTokenizer.from_pretrained("nghuyong/ernie-2.0-en")
+        do_lower = False
+        model = BertModel.from_pretrained("nghuyong/ernie-2.0-en", output_hidden_states=True)
 
     output_dir = "save_matrix/{}{}{}".format(
         model_type, trained_on, "" if "/" not in args.model_path else "trained" + msg
@@ -80,6 +87,8 @@ if __name__ == "__main__":
     args.output_file = output_dir + "/{}-{}.pkl"
     # save_matrix/{model_type}{trained dataset or ""}{""}/{dataset}/{split}-{layer}.pkl
 
+    print(f"Using the following dataset {args.dataset}")
+    # exit(0)
     data_bundle = DataLoader().load(args.dataset)
     for name in ["train", "test"]:
         args.data_split = name
