@@ -112,9 +112,9 @@ python train.py --dataset /home/scpdxcs/workspace/RoBERTaABSA/Perturbed-Masking/
 ```
 python generate_matrix.py --cuda True --model_path bert --data_dir /home/scpdxcs/workspace/RoBERTaABSA/Dataset --dataset Laptop
 
-python generate_asgcn.py --layers 11 --matrix_folder bert/Restaurants
+python generate_asgcn.py --layers 11 --matrix_folder bert/Laptop
 
-python train.py --dataset /home/scpdxcs/workspace/RoBERTaABSA/Perturbed-Masking/asgcn2/bert/11/Restaurants
+python train.py --dataset /home/scpdxcs/workspace/RoBERTaABSA/Perturbed-Masking/asgcn2/bert/11/Laptop
 ```
 
 ## Twitter
