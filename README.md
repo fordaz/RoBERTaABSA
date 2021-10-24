@@ -77,7 +77,87 @@ I have received several issues on the reproduction about RoBERTa results, especi
 
   4. Run the code in `ASGCN`, `PWCN` and `RGAT`.
 
+# Commands for remote experimentation
 
+## ASGCN
+
+### Restaurants
+
+* Generating the matrix
+
+```
+python generate_matrix.py --cuda True --model_path bert --data_dir /home/scpdxcs/workspace/RoBERTaABSA/Dataset --dataset Restaurants
+
+python generate_matrix.py --cuda True --model_path ernie --data_dir /home/scpdxcs/workspace/RoBERTaABSA/Dataset --dataset Restaurants
+```
+
+* Generating DTs for ASGCN
+
+```
+python generate_asgcn.py --layers 11 --matrix_folder bert/Restaurants
+
+python generate_asgcn.py --layers 11 --matrix_folder ernie/Restaurants
+```
+
+* Training ASGCN
+
+```
+python train.py --dataset /home/scpdxcs/workspace/RoBERTaABSA/Perturbed-Masking/asgcn2/bert/11/Restaurants
+
+python train.py --dataset /home/scpdxcs/workspace/RoBERTaABSA/Perturbed-Masking/asgcn2/ernie/11/Restaurants
+```
+
+## Laptop
+
+```
+python generate_matrix.py --cuda True --model_path bert --data_dir /home/scpdxcs/workspace/RoBERTaABSA/Dataset --dataset Laptop
+
+python generate_asgcn.py --layers 11 --matrix_folder bert/Restaurants
+
+python train.py --dataset /home/scpdxcs/workspace/RoBERTaABSA/Perturbed-Masking/asgcn2/bert/11/Restaurants
+```
+
+## Twitter
+
+TBD
+
+## PWCN
+
+### Restaurants
+
+```
+python generate_pwcn.py --layers 11 --matrix_folder bert/Restaurants
+
+python train.py --dataset /Users/fordaz/XCS224U/Project/workspace/fork-RoBERTaABSA/Perturbed-Masking/pwcn/bert/11/Restaurants
+
+python train.py --dataset /home/scpdxcs/workspace/RoBERTaABSA/Perturbed-Masking/pwcn/bert/11/Restaurants
+```
+
+## Laptop
+
+TBD
+
+## Twitter
+
+TBD
+
+## RGAT
+
+### Restaurants
+
+```
+python generate_rgat.py --workspace /home/scpdxcs/workspace/RoBERTaABSA/Perturbed-Masking --layers 11 --matrix_folder bert/Restaurants
+
+python run.py --glove_dir glove --highway --dataset_name /home/scpdxcs/workspace/RoBERTaABSA/Perturbed-Masking/rgat/bert/11/Restaurants
+```
+
+## Laptop
+
+TBD
+
+## Twitter
+
+TBD
 
 ## Disclaimer
 - We made necessary changes based on their original code for `ASGCN`, `PWCN` , `RGAT` and `Perturbed-Masking`. We believe all the changes are under the MIT License permission. And we opensource all the changes we have made.
